@@ -1,0 +1,41 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+
+apply plugin: 'java'
+
+version = '1.0'
+
+ext {
+
+    if (Os.isFamily(Os.FAMILY_UNIX)) {
+        os = 'linux'
+    }
+    if (Os.isFamily(Os.FAMILY_MAC)) {
+        os = 'macosx'
+    }
+    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+        os = 'windows'
+    }
+    arch = System.getProperty("os.arch");
+
+    if(arch == 'amd64'){
+        arch = 'x86_64'
+    }
+    opencvBinaryClassifer = os+'-'+arch;
+
+}
+
+test {
+    //Ensure you see test output on console
+    testLogging.showStandardStreams = true
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'org.bytedeco.javacpp-presets', name: 'tesseract', version: '3.03-rc1-0.11'
+    compile group: 'org.bytedeco.javacpp-presets', name: 'tesseract', version: '3.03-rc1-0.11', classifier: opencvBinaryClassifer
+    compile group: 'org.bytedeco.javacpp-presets', name: 'leptonica', version: '1.71-0.11', classifier: opencvBinaryClassifer
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+}
